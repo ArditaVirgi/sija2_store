@@ -1,0 +1,49 @@
+body {
+    background-color: #f7f6bb;
+}
+
+.main {
+    position: absolute;
+    top: 40%;
+    left: 5%;
+}
+
+.warna-teks-olive-muda {
+    color: #87a922;
+}
+
+.warna-teks-hijau-tua {
+    color: #114232;
+}
+
+.warna-teks-beige-tua {
+    color: #FCDC2A;
+}
+
+.fs-lg {
+    font-size: 15rem;
+}
+
+.fs-md {
+    font-size: 7rem;
+}
+
+.fs-sm {
+    font-size: 3rem;
+}
+
+.teks-center {
+    text-align: center;
+}
+
+.teks-shadow-hijau-tua {
+    text-shadow: 0 0 3px #114232;
+}
+
+.teks-shadow-merah {
+    text-shadow: 0 0 3px #FF0000;
+}
+
+.teks-shadow-beigetua {
+    text-shadow: 0 0 3px #FCDC2A;
+}
