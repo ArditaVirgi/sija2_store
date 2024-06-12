@@ -1,5 +1,5 @@
 <?php
-namespace app;
+namespace App;
 
 class Request{
     public static function getPath(){
@@ -12,7 +12,7 @@ class Request{
             if($path[2] === ''){
                 $path[2] = '/';
             }
-        }else if($path[1] === '11sija2_store'){
+        }else if($path[1] !== '11sija2_store'){
             if($path[1] === ''){
                 $path[1] = '/';
             }
@@ -25,10 +25,10 @@ class Request{
         $position = strpos($path, '?');
         if($position === false){
            return $path;
-    }
-    return substr($path, 0, $position);
+        }
+        return substr($path, 0, $position);
     }
     public static function getMethod(){
-    return strtolower($_SERVER['REQUEST_METHOD']);
+        return strtolower($_SERVER['REQUEST_METHOD']);
     }      
 }

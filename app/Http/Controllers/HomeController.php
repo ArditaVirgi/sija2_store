@@ -1,8 +1,7 @@
 <?php
 
-namespace app\Http\Controllers;
-
-use app\Request;
+namespace App\Http\Controllers;
+use App\Request;
 
 class HomeController extends Controller
 {
@@ -37,7 +36,13 @@ class HomeController extends Controller
      */
     public function show(string $id)
     {
-        return 'EDIT' . $id;
+        return 'SHOW' . $id;
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id){
+        return 'EDIT'. $id;
     }
 
     /**

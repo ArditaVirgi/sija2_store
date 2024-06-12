@@ -1,8 +1,8 @@
 <?php 
-namespace app\Http\Controllers;
+namespace App\Http\Controllers;
 
 class LoginController extends Controller{
-    public function index(){
+    public static function index(){
         return view('login.index', [
             'title' => 'LOGIN - SIJA\'s Store'
         ]);

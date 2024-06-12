@@ -1,6 +1,6 @@
 <?php
-namespace app;
-use app\Route;
+namespace App;
+use App\Route;
 
 class Application{
     public function run(){

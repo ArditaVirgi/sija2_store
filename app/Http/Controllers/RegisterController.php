@@ -1,5 +1,5 @@
 <?php
-namespace app\Http\Controllers;
+namespace App\Http\Controllers;
 
 class RegisterController extends Controller{
     public static function index(){
