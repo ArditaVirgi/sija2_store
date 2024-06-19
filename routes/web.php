@@ -15,3 +15,6 @@ Route::get('/register/{id}', [App\Http\Controllers\RegisterController::class, 's
 Route::get('/login', [App\Http\Controllers\LoginController::class, 'index']);
 
 Route::resource('/home', \App\Http\Controllers\HomeController::class);
+Route::resource('/', \App\Http\Controllers\HomeController::class);
+Route::resource('/about', \App\Http\Controllers\AboutController::class);
+Route::resource('/shop', \App\Http\Controllers\ShopController::class);

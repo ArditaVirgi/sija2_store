@@ -1,15 +1,20 @@
 <?php
+
 namespace App;
+
 use App\Request;
+
+// error_reporting(0);
 
 class Route
 {
+
     protected static array $route = [];
 
     public static function setParam($path)
     {
         $request = new Request;
-        $url = explode('/', $request::getPath());
+        $url = explode('/', $request::getPath()); //Mengambil Alamat URL
         $jmlh = count($url);
         if ($jmlh > 2) {
             $path = explode('/', $path);
@@ -24,6 +29,7 @@ class Route
         $path = self::setParam($path);
         self::$route['get'][$path] = $callback;
     }
+
     public static function post($path, $callback)
     {
         self::$route['post'][$path] = $callback;
@@ -32,70 +38,68 @@ class Route
     public static function resource($path, $callback)
     {
         $request = new Request;
-        $url = explode('/', $request::getPath());
-        $jmlh = count($url);
+        $url = explode('/', $request::getPath()); //Mengambil Alamat URL
 
-        if ($jmlh == 2) {
-            $path = '/' . $url[1];
-        } elseif ($jmlh == 3) {
-            if (!isset($url[2])) {
-            } else {
-                $path = '/' . $url[1] . '/' . $url[2];
-            }
-        } elseif ($jmlh == 4) {
-            $path = '/' . $url[1] . '/' . $url[2] . '/' . $url[3];
+        $alamat = '/' . $url[1];
+
+        if ($path === $alamat) { // Menampilkan halaman sesuai controller dan alamat urlnya
+            self::$route['get'][$path] = $callback;
         }
-        self::$route['get'][$path] = $callback;
     }
 
     public static function resolve()
     {
-        $request = new Request; //Mengambil alamat URL
-        $path = $request::getPath(); //Mengambil method dari route get, post, dll
-        $method = $request::getMethod();
-        $param = explode('/', $path)[2] ?? '';
-        $callback = self::$route[$method][$path] ?? false; //Mengambil nama class controller dan methodnya
+        $request = new Request;
+        $path = $request::getPath(); //Mengambil Alamat URL
+        $method = $request::getMethod(); //Mengambil method dari 
+        //Route yaitu get, post, dll
+        $url = explode('/', $path);
+        if (isset($url[2]) and !isset($url[3])) {
+            if ($url[2] === 'create' || $url[2] === 'store') {
+                $fungsi = $url[2];
+            } elseif (count($url) === 4) {
+                $param = $url[3];
+            } elseif (count($url) === 3) {
+                $fungsi = $url[2] ?? '';
+            }
+        } elseif (isset($url[2]) and isset($url[3])) {
+            $param = $url[2];
+            $fungsi = $url[3];
+        } elseif (count($url) === 2) {
+            $fungsi = 'index';
+        }
 
-        if ($callback === false) {
+        $callback = self::$route[$method]['/' . $url[1]];
+        if (!$callback) {
             require_once __DIR__ . '../../resources/views/error404.php';
         }
+
         if (is_callable($callback)) {
             return call_user_func($callback);
         }
 
         if (is_array($callback)) {
             if (method_exists($callback[0], $callback[1]) === false) {
-                return "<h3 style='background-color: #F7F6BB;
-                padding: 15px;border: 1px solid #87A922;
-                border-radius: 5px;'>Method $callback[0]::$callback[1] does not exist</h3>";
-            }
-            $callback[0] = new $callback[0]; //Mengubah Class Controller menjadi object
-            return call_user_func($callback, $param);
-        }
-
-        if (is_string($callback)) {
-            if ($method === 'get') {
-                $path = explode('/', $path);
-                if (count($path) == 3 and $path[2] === 'create') {
-                    $method = $path[2];
-                } elseif (count($path) == 3 and $path[2] !== 'create') {
-                    $method = 'show';
-                    $param = $path[2];
-                } elseif (count($path) == 4 and $path[3] === 'edit') {
-                    $method = $path[3];
-                    $param = $path[2];
-                } elseif (count($path) < 3) {
-                    $method = 'index';
-                }
-                $callback = explode('/', $callback . '/' . $method);
-            }
-            if (method_exists($callback[0], $callback[1]) === false) {
                 return "<h3 style='background-color: #F7F6BB;padding: 15px;
                 border: 1px solid #87A922;border-radius: 5px;'>
                 Method $callback[0]::$callback[1] does not exist.</h3>";
             }
-            $callback[0] = new $callback[0]; //Mengubah Class Controller menjadi object
+            $callback[0] = new $callback[0]; //Mengubah Class Controller menjadi object 
+
             return call_user_func($callback, $param);
+        }
+
+        if (is_string($callback)) {
+            $callback = explode('/', $callback . '/' . $fungsi);
+
+            if (method_exists($callback[0], $callback[1]) === false) {
+                return "<h3 style='background-color: #F7F6BB;padding: 15px;
+                border: 1px solid #87A922;border-radius: 5px;'>
+                Method $callback[0]::[$callback[1]] does not exist.</h3>";
+            }
+
+            $callback[0] = new $callback[0]; //Mengubah Class Controller menjadi object 
+            return call_user_func($callback, isset($param));
         }
     }
 }
